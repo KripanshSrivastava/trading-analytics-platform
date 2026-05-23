@@ -64,26 +64,21 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-register_error_handlers(app)
-
-app.add_middleware(RequestLoggingMiddleware)
-# Allow all origins in production (Railway, Vercel, etc.)
-# Restrict this to specific domains once your frontend URL is known
-CORS_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:5173",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:5173",
-    os.environ.get("FRONTEND_URL", ""),
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o for o in CORS_ORIGINS if o] or ["*"],
+    allow_origins=[
+        "https://tradehelp.tech",
+        "https://www.tradehelp.tech",
+        "https://tradehelp.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+register_error_handlers(app)
+
+app.add_middleware(RequestLoggingMiddleware)
 
 app.include_router(market.router)
 app.include_router(indicators.router)
