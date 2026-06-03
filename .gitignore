@@ -20,3 +20,12 @@ __pycache__/
 # Test cache
 .pytest_cache/
 .coverage
+
+# Log files
+*.log
+
+# SQLite databases
+*.db
+
+# Additional venv
+.venv/

@@ -13,7 +13,14 @@
 ```bash
 cd /Users/dhritismansarma/Desktop/Trade\ Analytics\ Platform
 source venv/bin/activate
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn main:app --reload --host 0.0.0.0 --port 8000 \
+  --reload-exclude 'venv/*' \
+  --reload-exclude '.venv/*' \
+  --reload-exclude 'frontend/node_modules/*' \
+  --reload-exclude '*.log' \
+  --reload-exclude '*.db' \
+  --reload-exclude '__pycache__/*' \
+  --reload-exclude '.git/*'
 ```
 
 **Expected Output:**

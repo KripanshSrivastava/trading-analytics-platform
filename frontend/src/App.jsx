@@ -1,6 +1,6 @@
 // src/App.jsx — complete final version
 
-import { useState }          from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import { QueryClient, QueryClientProvider, useQuery }       from '@tanstack/react-query'
 import {
@@ -15,18 +15,18 @@ import { useWatchlist }     from './hooks/useWatchlist'
 import ThemeToggle          from './components/ui/ThemeToggle'
 import WatchlistPanel       from './components/panels/WatchlistPanel'
 
-import Dashboard            from './pages/Dashboard'
-import Indicators           from './pages/Indicators'
-import AdvancedIndicators   from './pages/AdvancedIndicators'
-import SMC                  from './pages/SMC'
-import Predict              from './pages/Predict'
-import Risk                 from './pages/Risk'
-import Backtest             from './pages/Backtest'
-import News                 from './pages/News'
-import FiiDii               from './pages/FiiDii'
-import Journal              from './pages/Journal'
-import Charts               from './pages/Charts'
-import Liquidity            from './pages/Liquidity'
+const Dashboard            = lazy(() => import('./pages/Dashboard'))
+const Indicators           = lazy(() => import('./pages/Indicators'))
+const AdvancedIndicators   = lazy(() => import('./pages/AdvancedIndicators'))
+const SMC                  = lazy(() => import('./pages/SMC'))
+const Predict              = lazy(() => import('./pages/Predict'))
+const Risk                 = lazy(() => import('./pages/Risk'))
+const Backtest             = lazy(() => import('./pages/Backtest'))
+const News                 = lazy(() => import('./pages/News'))
+const FiiDii               = lazy(() => import('./pages/FiiDii'))
+const Journal              = lazy(() => import('./pages/Journal'))
+const Charts               = lazy(() => import('./pages/Charts'))
+const Liquidity            = lazy(() => import('./pages/Liquidity'))
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -231,20 +231,26 @@ function AppInner() {
         </div>
 
         <div style={{ padding: '1.5rem' }}>
-          <Routes>
-            <Route path="/"           element={<Dashboard />}          />
-            <Route path="/indicators" element={<Indicators />}         />
-            <Route path="/advanced"   element={<AdvancedIndicators />} />
-            <Route path="/smc"        element={<SMC />}                />
-            <Route path="/liquidity"  element={<Liquidity />}          />
-            <Route path="/charts"     element={<Charts />}             />
-            <Route path="/predict"    element={<Predict />}            />
-            <Route path="/risk"       element={<Risk />}               />
-            <Route path="/backtest"   element={<Backtest />}           />
-            <Route path="/news"       element={<News />}               />
-            <Route path="/fii-dii"    element={<FiiDii />}             />
-            <Route path="/journal"    element={<Journal />}            />
-          </Routes>
+          <Suspense fallback={
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: 'var(--color-text-secondary)', fontSize: '14px' }}>
+              Loading page...
+            </div>
+          }>
+            <Routes>
+              <Route path="/"           element={<Dashboard />}          />
+              <Route path="/indicators" element={<Indicators />}         />
+              <Route path="/advanced"   element={<AdvancedIndicators />} />
+              <Route path="/smc"        element={<SMC />}                />
+              <Route path="/liquidity"  element={<Liquidity />}          />
+              <Route path="/charts"     element={<Charts />}             />
+              <Route path="/predict"    element={<Predict />}            />
+              <Route path="/risk"       element={<Risk />}               />
+              <Route path="/backtest"   element={<Backtest />}           />
+              <Route path="/news"       element={<News />}               />
+              <Route path="/fii-dii"    element={<FiiDii />}             />
+              <Route path="/journal"    element={<Journal />}            />
+            </Routes>
+          </Suspense>
         </div>
       </main>
     </div>

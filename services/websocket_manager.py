@@ -128,9 +128,12 @@ async def _upstox_ws_connect() -> None:
         logger.warning("No Upstox access token — WebSocket feed disabled")
         return
 
-    reconnect_delay = 5  # seconds between reconnect attempts
+    reconnect_delay = 5  # initial delay in seconds
+    max_reconnect_delay = 160  # cap backoff at ~2.5 minutes
+    max_retries = 10  # stop after this many consecutive failures
+    consecutive_failures = 0
 
-    while True:
+    while consecutive_failures < max_retries:
         try:
             headers = {
                 "Authorization": f"Bearer {settings.upstox_access_token}",
@@ -152,6 +155,8 @@ async def _upstox_ws_connect() -> None:
                 ssl=ssl_context,
             ) as ws:
                 _connected = True
+                consecutive_failures = 0  # reset on successful connection
+                reconnect_delay = 5  # reset backoff
                 logger.info("Upstox WebSocket connected")
 
                 # Subscribe to instruments
@@ -185,17 +190,30 @@ async def _upstox_ws_connect() -> None:
 
         except websockets.exceptions.ConnectionClosed as e:
             _connected = False
+            consecutive_failures += 1
             logger.warning(
-                f"Upstox WebSocket closed: {e}. Reconnecting in {reconnect_delay}s..."
+                f"Upstox WebSocket closed: {e}. "
+                f"Retry {consecutive_failures}/{max_retries} in {reconnect_delay}s..."
             )
 
         except Exception as e:
             _connected = False
+            consecutive_failures += 1
             logger.error(
-                f"Upstox WebSocket error: {e}. Reconnecting in {reconnect_delay}s..."
+                f"Upstox WebSocket error: {e}. "
+                f"Retry {consecutive_failures}/{max_retries} in {reconnect_delay}s..."
             )
 
         await asyncio.sleep(reconnect_delay)
+        # Exponential backoff, capped at max_reconnect_delay
+        reconnect_delay = min(reconnect_delay * 2, max_reconnect_delay)
+
+    # Exhausted all retries
+    logger.error(
+        f"Upstox WebSocket gave up after {max_retries} consecutive failures. "
+        f"Your access token is likely expired. "
+        f"Re-authenticate at /auth/upstox/login to get a new token, then restart."
+    )
 
 
 async def start_websocket_feed() -> None:

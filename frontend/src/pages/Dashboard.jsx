@@ -59,7 +59,6 @@ export default function Dashboard() {
 
   const isLoading = mLoading || iLoading
 
-  if (isLoading) return <LoadingSpinner />
   if (mError)    return <ErrorMessage message={mError.message} onRetry={refetch} />
 
   const summary  = market?.summary    || {}
@@ -89,17 +88,21 @@ export default function Dashboard() {
             margin:     '0 0 3px',
             color:      'var(--color-text-primary)',
           }}>
-            {market?.name || 'Market Dashboard'}
+            {isLoading ? 'Loading Market...' : (market?.name || 'Market Dashboard')}
           </h1>
           <p style={{
             fontSize: '12px',
             color:    'var(--color-text-secondary)',
             margin:   0,
           }}>
-            {market?.count} candles · {market?.period} ·{' '}
-            <span style={{ color: market?._cache === 'HIT' ? '#1D9E75' : '#BA7517' }}>
-              {market?._cache === 'HIT' ? 'cached' : 'live'}
-            </span>
+            {isLoading ? 'Waiting for backend to start...' : (
+              <>
+                {market?.count} candles · {market?.period} ·{' '}
+                <span style={{ color: market?._cache === 'HIT' ? '#1D9E75' : '#BA7517' }}>
+                  {market?._cache === 'HIT' ? 'cached' : 'live'}
+                </span>
+              </>
+            )}
           </p>
         </div>
         <SymbolSelector
@@ -119,28 +122,29 @@ export default function Dashboard() {
       }}>
         <StatCard
           label="Last close"
-          value={formatPrice(summary.latest_close)}
-          change={summary.change_pct}
+          value={isLoading ? "—" : formatPrice(summary.latest_close)}
+          change={isLoading ? 0 : summary.change_pct}
         />
         <StatCard
           label="Change"
-          value={formatPct(summary.change_pct)}
-          color={summary.change_pct >= 0 ? '#1D9E75' : '#E24B4A'}
+          value={isLoading ? "—" : formatPct(summary.change_pct)}
+          color={isLoading ? "var(--color-text-secondary)" : (summary.change_pct >= 0 ? '#1D9E75' : '#E24B4A')}
         />
         <StatCard
           label="Period high"
-          value={formatPrice(summary.period_high)}
+          value={isLoading ? "—" : formatPrice(summary.period_high)}
           color="#1D9E75"
         />
         <StatCard
           label="Period low"
-          value={formatPrice(summary.period_low)}
+          value={isLoading ? "—" : formatPrice(summary.period_low)}
           color="#E24B4A"
         />
         <StatCard
           label="RSI (14)"
-          value={latest.rsi_value || '—'}
+          value={isLoading ? "—" : (latest.rsi_value || '—')}
           color={
+            isLoading ? "var(--color-text-secondary)" :
             latest.rsi_signal === 'overbought' ? '#E24B4A' :
             latest.rsi_signal === 'oversold'   ? '#1D9E75' :
             'var(--color-text-primary)'
@@ -148,8 +152,8 @@ export default function Dashboard() {
         />
         <StatCard
           label="EMA position"
-          value={latest.price_vs_ema || '—'}
-          color={latest.price_vs_ema === 'above' ? '#1D9E75' : '#E24B4A'}
+          value={isLoading ? "—" : (latest.price_vs_ema || '—')}
+          color={isLoading ? "var(--color-text-secondary)" : (latest.price_vs_ema === 'above' ? '#1D9E75' : '#E24B4A')}
         />
       </div>
 
@@ -168,26 +172,35 @@ export default function Dashboard() {
           onOverlayToggle={handleOverlayToggle}
         />
 
-        <CandlestickChart
-          data={candles}
-          emaData={indData}
-          fvgZones={fvgZones}
-          showVolume={overlays.volume}
-          showEMA={overlays.ema}
-          showFVG={overlays.fvg}
-          height={380}
-          isIntraday={!['1d','1wk','1mo'].includes(interval)}
-          onCrosshair={setHoveredCandle}
-        />
+        {isLoading ? (
+          <div style={{ height: 380, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-secondary)' }}>
+            <LoadingSpinner />
+            <div style={{ marginTop: '16px', fontSize: '13px' }}>Backend is starting up...</div>
+          </div>
+        ) : (
+          <CandlestickChart
+            data={candles}
+            emaData={indData}
+            fvgZones={fvgZones}
+            showVolume={overlays.volume}
+            showEMA={overlays.ema}
+            showFVG={overlays.fvg}
+            height={380}
+            isIntraday={!['1d','1wk','1mo'].includes(interval)}
+            onCrosshair={setHoveredCandle}
+          />
+        )}
 
         <CrosshairTooltip data={hoveredCandle} />
       </div>
 
       {/* ── Live ticker ──────────────────────────────────────────── */}
-      <LivePriceTicker
-        symbol={symbol}
-        lastClose={summary.latest_close}
-      />
+      {!isLoading && (
+        <LivePriceTicker
+          symbol={symbol}
+          lastClose={summary.latest_close}
+        />
+      )}
 
       {/* ── Bottom row — FII/DII + News mood ────────────────────── */}
       <div style={{
