@@ -30,7 +30,7 @@ INTRADAY_INTERVAL_PERIODS = {
 }
 
 DAILY_INTERVALS   = {"1d", "1wk", "1mo"}
-DAILY_PERIODS     = {"1mo", "3mo", "6mo", "1y", "2y", "5y"}
+DAILY_PERIODS     = {"1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "max"}
 INTRADAY_PERIODS  = {"1d", "5d", "1mo", "3mo", "6mo", "1y", "2y"}
 
 
@@ -64,6 +64,8 @@ def _count_for_period(period: str) -> int:
         "1y": 252,
         "2y": 504,
         "5y": 1260,
+        "10y": 2520,
+        "max": 5040,
     }
     return mapping.get(period, 22)
 

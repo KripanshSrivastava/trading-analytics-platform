@@ -128,7 +128,7 @@ export default function Backtest() {
               Test period
             </label>
             <select value={config.period} onChange={set('period')} style={selectStyle}>
-              {PERIODS.filter((p) => ['1y', '2y', '5y'].includes(p.value)).map((p) => (
+              {PERIODS.filter((p) => ['1y', '2y', '5y', '10y', 'max'].includes(p.value)).map((p) => (
                 <option key={p.value} value={p.value}>{p.label}</option>
               ))}
             </select>

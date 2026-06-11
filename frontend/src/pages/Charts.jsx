@@ -16,10 +16,11 @@ const TIMEFRAMES = [
   { label: '5m',  value: '5m',  period: '5d',  intraday: true  },
   { label: '15m', value: '15m', period: '5d',  intraday: true  },
   { label: '30m', value: '30m', period: '1mo', intraday: true  },
-  { label: '1H',  value: '60m', period: '1mo', intraday: true  },
-  { label: '4H',  value: '4h',  period: '3mo', intraday: true  },
-  { label: '1D',  value: '1d',  period: '1y',  intraday: false },
-  { label: '1W',  value: '1wk', period: '2y',  intraday: false },
+  { label: '1H',  value: '60m', period: '3mo', intraday: true  },
+  { label: '4H',  value: '4h',  period: '6mo', intraday: true  },
+  { label: '1D',  value: '1d',  period: '2y',  intraday: false },
+  { label: '1W',  value: '1wk', period: '5y',  intraday: false },
+  { label: '1M',  value: '1mo', period: '10y', intraday: false },
 ]
 
 const INDEXES = [
@@ -288,7 +289,7 @@ export default function Charts() {
         color:        'var(--color-text-tertiary)',
       }}>
         <strong style={{ color: 'var(--color-text-secondary)' }}>Data limits (Yahoo Finance):</strong>
-        {' '}1m → last 7 days · 5m/15m/30m → last 60 days · 1H/4H → last 730 days · 1D/1W → up to 5 years.
+        {' '}1m → last 7 days · 5m/15m/30m → last 60 days · 1H/4H → last 730 days · 1D/1W/1M → up to 10 years (or max available).
         Data refreshes automatically on interval change.
       </div>
     </div>

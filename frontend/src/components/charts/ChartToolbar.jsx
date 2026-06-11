@@ -7,10 +7,11 @@ const TIMEFRAMES = [
   { label: '5m',  value: '5m',  period: '5d'  },
   { label: '15m', value: '15m', period: '5d'  },
   { label: '30m', value: '30m', period: '1mo' },
-  { label: '1H',  value: '60m', period: '1mo' },
-  { label: '4H',  value: '4h',  period: '3mo' },
-  { label: '1D',  value: '1d',  period: '1y'  },
-  { label: '1W',  value: '1wk', period: '2y'  },
+  { label: '1H',  value: '60m', period: '3mo' },
+  { label: '4H',  value: '4h',  period: '6mo' },
+  { label: '1D',  value: '1d',  period: '2y'  },
+  { label: '1W',  value: '1wk', period: '5y'  },
+  { label: '1M',  value: '1mo', period: '10y' },
 ]
 
 const OVERLAYS = [

@@ -33,7 +33,7 @@ def fetch_yfinance_market_data(
 
     Args:
         symbol:   Ticker symbol (^NSEI, ^BSESN, ^NSEBANK)
-        period:   Time period ("1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y")
+        period:   Time period ("1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "max")
         interval: Candle interval ("1d", "1wk", "1mo", "1m", "5m", "15m", "30m", "60m", "4h")
 
     Returns:

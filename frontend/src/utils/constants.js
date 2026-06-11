@@ -7,12 +7,14 @@ export const SYMBOLS = [
 ]
 
 export const PERIODS = [
-  { value: '1mo',  label: '1 Month'  },
-  { value: '3mo',  label: '3 Months' },
-  { value: '6mo',  label: '6 Months' },
-  { value: '1y',   label: '1 Year'   },
-  { value: '2y',   label: '2 Years'  },
-  { value: '5y',   label: '5 Years'  },
+  { value: '1mo',  label: '1 Month'   },
+  { value: '3mo',  label: '3 Months'  },
+  { value: '6mo',  label: '6 Months'  },
+  { value: '1y',   label: '1 Year'    },
+  { value: '2y',   label: '2 Years'   },
+  { value: '5y',   label: '5 Years'   },
+  { value: '10y',  label: '10 Years'  },
+  { value: 'max',  label: 'Max'       },
 ]
 
 export const STRATEGIES = [
